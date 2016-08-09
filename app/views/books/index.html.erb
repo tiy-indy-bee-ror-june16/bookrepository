@@ -1,0 +1,22 @@
+<% @books.each do |book| %>
+  <%= book.title %>
+  <%= form_tag charges_path do %>
+  <input type="hidden" name="amount" value="<%= book.price %>" />
+  <article>
+    <% if flash[:error].present? %>
+      <div id="error_explanation">
+        <p><%= flash[:error] %></p>
+      </div>
+    <% end %>
+    <label class="amount">
+      <span>Amount: <%= number_to_currency(book.price/100.to_f) %></span>
+    </label>
+  </article>
+
+  <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+          data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+          data-description="<%=j book.title %>"
+          data-amount="<%= book.price %>"
+          data-locale="auto"></script>
+<% end %>
+<% end %>
